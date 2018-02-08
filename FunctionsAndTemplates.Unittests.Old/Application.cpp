@@ -52,6 +52,8 @@ int main()
 
 	auto anotherTester = mem_fc(&stringTester::printthis);
 
+	auto sponk = [](int a) { return a; };
+
 	std::cout << anotherTester(&tester, "Hej med dig, hvordan går det?");
 
 	//auto testOne = memfc<int()>(&anotherlol);
