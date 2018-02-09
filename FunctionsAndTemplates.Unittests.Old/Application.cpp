@@ -9,6 +9,11 @@ struct LOL
 	{
 		return 5;
 	}
+
+	void printSomethingInLOL(const std::string& test)
+	{
+		std::cout << "Printing from LOL: " << test << std::endl;
+	}
 };
 
 class stringTester
@@ -25,9 +30,9 @@ public:
 		std::cout << "I is: " << i << std::endl;
 	}
 
-	std::string printthis(const std::string& input)
+	void printthis(const std::string& input)
 	{
-		return input + " " + std::to_string(i);
+		std::cout << input + " " + std::to_string(i) << std::endl;
 	}
 
 	int i;
@@ -38,29 +43,52 @@ int anotherlol()
 	return 2;
 }
 
-std::string swagtest(const std::string& input, int lol)
+void testi()
 {
-	return input;
+	std::cout << "Testi" << std::endl;
 }
+
+void swagtest(const std::string& input)
+{
+	std::cout << "swagtest: " << input << std::endl;
+}
+
+typedef void empty;
 
 int main()
 {
-	LOL qwe;
-	auto test = mem_fc(&LOL::lol);
+	Deligate<const std::string&> response;
+	Deligate<void> anotherResponse;
 
-	stringTester tester(5);
+	anotherResponse.add(&testi);
+	anotherResponse.invoke();
 
-	auto anotherTester = mem_fc(&stringTester::printthis);
+	stringTester stringT(5);
+	LOL lolT;
+	
 
-	auto sponk = [](int a) { return a; };
+	response.add(&stringTester::printthis, &stringT);
+	response.add(&LOL::printSomethingInLOL, &lolT);
+	response.add(&swagtest);
 
-	std::cout << anotherTester(&tester, "Hej med dig, hvordan går det?");
+	response.invoke("Hej med dig");
 
-	//auto testOne = memfc<int()>(&anotherlol);
+	//LOL qwe;
+	//auto test = mem_fc(&LOL::lol);
 
-	auto testTwo = mem_fc(&anotherlol);
+	//stringTester tester(5);
 
-	auto derp = mem_fc(&swagtest);
+	//auto anotherTester = mem_fc(&stringTester::printthis);
 
-	std::cout << "Hello world" << test(&qwe) << std::endl;
+	//auto sponk = [](int a) { return a; };
+
+	//std::cout << anotherTester(&tester, "Hej med dig, hvordan går det?");
+
+	////auto testOne = memfc<int()>(&anotherlol);
+
+	//auto testTwo = mem_fc(&anotherlol);
+
+	//auto derp = mem_fc(&swagtest);
+
+	//std::cout << "Hello world" << test(&qwe) << std::endl;
 }

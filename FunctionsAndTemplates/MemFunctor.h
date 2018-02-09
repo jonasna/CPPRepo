@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <forward_list>
 #include <vector>
+#include <functional>
 
 template<class Return, class Type>
 class MemFunctor
@@ -75,14 +76,62 @@ memfunc<R(C::*)(A...)> mem_fc(R(C::*func)(A...))
 	return memfunc<R(C::*)(A...)>(func);
 }
 
-template<class Ret, class Arg>
+template<class Arg>
 class Deligate
 {
 public:
+	Deligate() = default;
 
-	template<typename R, typename C, typename ... A>
-	Deligate()
-	
+	template <class Type>
+	void add(void(Type::*deligate)(Arg), Type* obj)
+	{
+		using std::placeholders::_1;
+		deligates_.push_back(std::bind(deligate, obj, _1));
+	}
+
+	void add(void(*deligate)(Arg))
+	{
+		deligates_.push_back(deligate);
+	}
+
+	void invoke(Arg&& a)
+	{
+		for (auto deligate : deligates_)
+		{
+			deligate(std::forward<Arg>(a));
+		}
+	}
+		
 private:
+	std::vector<std::function<void(Arg)>> deligates_;
 
+};
+
+template<>
+class Deligate<void>
+{
+public:
+	Deligate() = default;
+
+	template <class Type>
+	void add(void(Type::*deligate)(), Type* obj)
+	{
+		using std::placeholders::_1;
+		deligates_.push_back(std::bind(deligate, obj, _1));
+	}
+
+	void add(void(*deligate)())
+	{
+		deligates_.emplace_back(deligate);
+	}
+
+	void invoke()
+	{
+		for (const auto& deligate : deligates_)
+		{
+			deligate();
+		}
+	}
+private:
+	std::vector<std::function<void()>> deligates_;
 };
