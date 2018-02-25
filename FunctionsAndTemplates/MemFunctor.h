@@ -2,6 +2,8 @@
 #include <forward_list>
 #include <vector>
 #include <functional>
+#include <memory>
+#include <iostream>
 
 template<class Return, class Type>
 class MemFunctor
@@ -96,16 +98,18 @@ public:
 
 	void invoke(Arg&& a)
 	{
-		for (auto deligate : deligates_)
+		for (const auto& deligate : deligates_)
 		{
 			deligate(std::forward<Arg>(a));
 		}
 	}
 		
 private:
+
 	std::vector<std::function<void(Arg)>> deligates_;
 
 };
+
 
 template<>
 class Deligate<void>
@@ -134,4 +138,38 @@ public:
 	}
 private:
 	std::vector<std::function<void()>> deligates_;
+};
+
+template<typename Owner, class Arg>
+class Event
+{
+	friend Owner;
+
+public:
+
+	explicit Event(Deligate<Arg>* deligate) : deligate_(deligate)
+	{
+		
+	}
+
+	template <class Type>
+	void add(void(Type::*deligate)(Arg), Type* obj)
+	{
+		deligate_->add(deligate, obj);
+	}
+
+	void add(void(*deligate)(Arg))
+	{
+		deligate_->add(deligate);
+	}
+
+
+private:
+
+	void invoke(Arg&& arg)
+	{
+		deligate_->invoke(std::forward<Arg>(arg));
+	}
+
+	std::unique_ptr<Deligate<Arg>> deligate_;
 };

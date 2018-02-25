@@ -21,12 +21,18 @@
     <ClInclude Include="FunctionWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="deligate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MemFunctor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FunctionWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="deligate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

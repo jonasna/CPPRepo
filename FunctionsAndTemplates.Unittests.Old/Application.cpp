@@ -3,92 +3,55 @@
 #include "../FunctionsAndTemplates/MemFunctor.h"
 
 
-struct LOL
-{
-	int lol()
-	{
-		return 5;
-	}
-
-	void printSomethingInLOL(const std::string& test)
-	{
-		std::cout << "Printing from LOL: " << test << std::endl;
-	}
-};
-
-class stringTester
+class TestClass
 {
 public:
 
-	stringTester(int i = 0)
+	TestClass() : testEvent_(new Deligate<const std::string&>)
 	{
-		this->i = i;
+		
 	}
 
-	void doThat()
+	void test()
 	{
-		std::cout << "I is: " << i << std::endl;
+		testEvent_.invoke("Hej");
 	}
 
-	void printthis(const std::string& input)
+	void lololol()
 	{
-		std::cout << input + " " + std::to_string(i) << std::endl;
+		std::cout << "rofl" << std::endl;
 	}
 
-	int i;
+	Event<TestClass, const std::string&> testEvent_;
+	
+private:
+	
 };
 
-int anotherlol()
+void TestOne(const std::string& testOne)
 {
-	return 2;
+	std::cout << __FUNCTION__ << std::endl;
 }
 
-void testi()
+void TestTwo(const std::string& testTwo)
 {
-	std::cout << "Testi" << std::endl;
+	std::cout << __FUNCTION__ << std::endl;
 }
 
-void swagtest(const std::string& input)
-{
-	std::cout << "swagtest: " << input << std::endl;
-}
-
-typedef void empty;
 
 int main()
 {
-	Deligate<const std::string&> response;
-	Deligate<void> anotherResponse;
+	TestClass test;
 
-	anotherResponse.add(&testi);
-	anotherResponse.invoke();
 
-	stringTester stringT(5);
-	LOL lolT;
+	Deligate<void> del;
+
+	del.add(&TestClass::lololol);
+
+	//test.testEvent_.add(&TestOne);
+	//test.testEvent_.add(&TestTwo);
+
 	
 
-	response.add(&stringTester::printthis, &stringT);
-	response.add(&LOL::printSomethingInLOL, &lolT);
-	response.add(&swagtest);
-
-	response.invoke("Hej med dig");
-
-	//LOL qwe;
-	//auto test = mem_fc(&LOL::lol);
-
-	//stringTester tester(5);
-
-	//auto anotherTester = mem_fc(&stringTester::printthis);
-
-	//auto sponk = [](int a) { return a; };
-
-	//std::cout << anotherTester(&tester, "Hej med dig, hvordan går det?");
-
-	////auto testOne = memfc<int()>(&anotherlol);
-
-	//auto testTwo = mem_fc(&anotherlol);
-
-	//auto derp = mem_fc(&swagtest);
-
-	//std::cout << "Hello world" << test(&qwe) << std::endl;
+	//test.test();
 }
